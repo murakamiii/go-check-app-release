@@ -1,4 +1,4 @@
-.PHONY: all build justrun run test
+.PHONY: all build justrun run test fmt
 
 all: ;
 
@@ -12,3 +12,6 @@ run: build justrun
 
 test:
 	go test ./...
+
+fmt: 
+	go fmt ./...

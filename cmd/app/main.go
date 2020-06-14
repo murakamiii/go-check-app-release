@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	app := ios.App { &http.Client{ Timeout: time.Second * 10 } }
+	app := ios.App{&http.Client{Timeout: time.Second * 10}}
 	version, err := app.GetVersion()
 	if err != nil {
 		fmt.Println(err)

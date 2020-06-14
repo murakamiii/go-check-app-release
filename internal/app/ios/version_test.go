@@ -2,10 +2,10 @@ package ios
 
 import (
 	"bytes"
-	"testing"
-	"net/http"
-	"io/ioutil"
 	"errors"
+	"io/ioutil"
+	"net/http"
+	"testing"
 )
 
 // RoundTripFunc see http://hassansin.github.io/Unit-Testing-http-client-in-Go
@@ -26,9 +26,9 @@ func NewTestClient(fn RoundTripFunc) *http.Client {
 
 func TestGetVersion(t *testing.T) {
 	cases := []struct {
-		client		*http.Client
-		expectStr	string
-		expectErr	error
+		client    *http.Client
+		expectStr string
+		expectErr error
 	}{
 		{
 			NewTestClient(func(req *http.Request) *http.Response {
@@ -52,7 +52,7 @@ func TestGetVersion(t *testing.T) {
 		},
 	}
 	for _, c := range cases {
-		app := App { c.client }
+		app := App{c.client}
 		str, err := app.GetVersion()
 		if err != nil && err.Error() != c.expectErr.Error() {
 			t.Errorf("invalid error expect: %s, actual: %s", c.expectErr, err)
