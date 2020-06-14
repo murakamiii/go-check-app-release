@@ -6,9 +6,14 @@ import (
 	"net/http"
 )
 
+// App ...
+type App struct {
+	Client *http.Client
+}
+
 // GetVersion ...
-func GetVersion() (string, error) {
-	resp, err := http.Get("https://itunes.apple.com/lookup?id=944884603&country=JP")
+func (app *App) GetVersion() (string, error) {
+	resp, err := app.Client.Get("https://itunes.apple.com/lookup?id=944884603&country=JP")
 	if err != nil {
 		return "", err
 	}
