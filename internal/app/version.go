@@ -2,10 +2,11 @@ package app
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
+	"golang.org/x/net/html"
 	"io/ioutil"
 	"net/http"
-	"golang.org/x/net/html"
-	"errors"
 )
 
 // App ...
@@ -18,7 +19,7 @@ func (app *App) GetVersions(iosID string, androidID string) (map[string]string, 
 	v := map[string]string{}
 
 	if len(iosID) > 0 {
-		iosv, err := app.GetiOSVersion()
+		iosv, err := app.GetiOSVersion(iosID)
 		if err != nil {
 			return v, err
 		}
@@ -26,7 +27,7 @@ func (app *App) GetVersions(iosID string, androidID string) (map[string]string, 
 	}
 
 	if len(androidID) > 0 {
-		androidv, err := app.GetAndroidVersion()
+		androidv, err := app.GetAndroidVersion(androidID)
 		if err != nil {
 			return v, err
 		}
@@ -37,8 +38,9 @@ func (app *App) GetVersions(iosID string, androidID string) (map[string]string, 
 }
 
 // GetiOSVersion ...
-func (app *App) GetiOSVersion() (string, error) {
-	resp, err := app.Client.Get("https://itunes.apple.com/lookup?id=944884603&country=JP")
+func (app *App) GetiOSVersion(id string) (string, error) {
+	url := fmt.Sprintf("https://itunes.apple.com/lookup?id=%s&country=JP", id)
+	resp, err := app.Client.Get(url)
 	if err != nil {
 		return "", err
 	}
@@ -58,7 +60,7 @@ func (app *App) GetiOSVersion() (string, error) {
 }
 
 // GetAndroidVersion do scraping html
-/** 
+/**
 ↓を期待している
 <div class="hAyfc">
 	<div class="BgcNfc">現在のバージョン</div>
@@ -69,8 +71,9 @@ func (app *App) GetiOSVersion() (string, error) {
 	</span>
 </div>
 **/
-func (app *App) GetAndroidVersion() (string, error) {
-	resp, err := app.Client.Get("https://play.google.com/store/apps/details?id=com.coconala.android.portal&hl=ja")
+func (app *App) GetAndroidVersion(id string) (string, error) {
+	url := fmt.Sprintf("https://play.google.com/store/apps/details?id=%s&hl=ja", id)
+	resp, err := app.Client.Get(url)
 	if err != nil {
 		return "", err
 	}

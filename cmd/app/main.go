@@ -23,7 +23,7 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	
+
 	msgs, err := tag.UpdateVersionTags(v)
 	if err != nil {
 		fmt.Println(err)
