@@ -2,11 +2,11 @@ package app
 
 import (
 	"encoding/json"
-	"io/ioutil"
-	"net/http"
-	"golang.org/x/net/html"
 	"errors"
 	"fmt"
+	"golang.org/x/net/html"
+	"io/ioutil"
+	"net/http"
 )
 
 // App ...
@@ -60,7 +60,7 @@ func (app *App) GetiOSVersion(id string) (string, error) {
 }
 
 // GetAndroidVersion do scraping html
-/** 
+/**
 ↓を期待している
 <div class="hAyfc">
 	<div class="BgcNfc">現在のバージョン</div>

@@ -6,7 +6,6 @@ import (
 	"reflect"
 	"strings"
 	"testing"
-
 )
 
 func getTagLines() []string {
@@ -16,7 +15,7 @@ func getTagLines() []string {
 
 func deleteAllTags() {
 	cmdstr := "git tag | xargs git tag -d"
-	err :=exec.Command("sh", "-c", cmdstr).Run()
+	err := exec.Command("sh", "-c", cmdstr).Run()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -56,13 +55,13 @@ func TestCurrentVersions(t *testing.T) {
 	defer tearDown(lines)
 
 	cases := []struct {
-		tags []string
+		tags    []string
 		expects map[string]string
 	}{
-		{ []string{}, map[string]string{} },
-		{ []string{"ios-1.2.3"}, map[string]string{"ios": "1.2.3"} },
-		{ []string{"ios-1.2.3", "android-2.3.4"}, map[string]string{"ios": "1.2.3", "android":"2.3.4"} },
-		{ []string{"ios-1.2.3", "android-2.3.4", "release-1.0.0"}, map[string]string{"ios": "1.2.3", "android":"2.3.4"} },
+		{[]string{}, map[string]string{}},
+		{[]string{"ios-1.2.3"}, map[string]string{"ios": "1.2.3"}},
+		{[]string{"ios-1.2.3", "android-2.3.4"}, map[string]string{"ios": "1.2.3", "android": "2.3.4"}},
+		{[]string{"ios-1.2.3", "android-2.3.4", "release-1.0.0"}, map[string]string{"ios": "1.2.3", "android": "2.3.4"}},
 	}
 
 	for _, c := range cases {
@@ -85,26 +84,24 @@ func TestUpdateVersionTags(t *testing.T) {
 	// TODO: 重い
 }
 
-
-
 func TestDoAction(t *testing.T) {
 	lines := setup()
 	defer tearDown(lines)
 
 	cases := []struct {
-		tags []string
-		retrived map[string]string
-		osType string
-		expectsMsg string
+		tags        []string
+		retrived    map[string]string
+		osType      string
+		expectsMsg  string
 		expectsTags []string
 	}{
-		{ []string{}, map[string]string{}, "ios", "", []string{""} },
-		{ []string{"ios-0.0.1"}, map[string]string{}, "ios", "", []string{"ios-0.0.1"} },
-		{ []string{"ios-0.0.1", "android-0.1.2"}, map[string]string{}, "ios", "", []string{"ios-0.0.1", "android-0.1.2"} },
-		{ []string{"android-0.1.2"}, map[string]string{"ios": "0.0.2"}, "ios", "ios: 0.0.2 を登録しました", []string{"android-0.1.2", "ios-0.0.2"} },
-		{ []string{"ios-0.0.1"}, map[string]string{"android": "0.2.0"}, "android", "android: 0.2.0 を登録しました", []string{"android-0.2.0", "ios-0.0.1"} },
-		{ []string{"ios-0.0.1", "android-0.1.2"}, map[string]string{"ios": "0.0.2"}, "ios", "ios: 0.0.2 が公開されました", []string{"android-0.1.2", "ios-0.0.2"} },
-		{ []string{"ios-0.0.1", "android-0.1.2"}, map[string]string{"android": "0.2.0"}, "android", "android: 0.2.0 が公開されました", []string{"android-0.2.0", "ios-0.0.1"} },
+		{[]string{}, map[string]string{}, "ios", "", []string{""}},
+		{[]string{"ios-0.0.1"}, map[string]string{}, "ios", "", []string{"ios-0.0.1"}},
+		{[]string{"ios-0.0.1", "android-0.1.2"}, map[string]string{}, "ios", "", []string{"ios-0.0.1", "android-0.1.2"}},
+		{[]string{"android-0.1.2"}, map[string]string{"ios": "0.0.2"}, "ios", "ios: 0.0.2 を登録しました", []string{"android-0.1.2", "ios-0.0.2"}},
+		{[]string{"ios-0.0.1"}, map[string]string{"android": "0.2.0"}, "android", "android: 0.2.0 を登録しました", []string{"android-0.2.0", "ios-0.0.1"}},
+		{[]string{"ios-0.0.1", "android-0.1.2"}, map[string]string{"ios": "0.0.2"}, "ios", "ios: 0.0.2 が公開されました", []string{"android-0.1.2", "ios-0.0.2"}},
+		{[]string{"ios-0.0.1", "android-0.1.2"}, map[string]string{"android": "0.2.0"}, "android", "android: 0.2.0 が公開されました", []string{"android-0.2.0", "ios-0.0.1"}},
 	}
 
 	for _, c := range cases {
@@ -126,20 +123,20 @@ func TestDoAction(t *testing.T) {
 
 func TestSelectAction(t *testing.T) {
 	cases := []struct {
-		current string
+		current  string
 		retrived string
-		expects action
+		expects  action
 	}{
-		{ "", "", ignore },
-		{ "", "0.0.1", insert },
-		{ "0.0.1", "", ignore },
-		{ "0.0.1", "0.0.1", ignore },
-		{ "0.0.1", "0.0.2", update },
-		{ "1.0.99", "1.1.0", update },
-		{ "1.99.99", "2.0.0", update },
-		{ "1.1.1", "1.1.0", ignore },
-		{ "1.1.0", "1.00.99", ignore },
-		{ "1.0.0", "0.99.99", ignore },
+		{"", "", ignore},
+		{"", "0.0.1", insert},
+		{"0.0.1", "", ignore},
+		{"0.0.1", "0.0.1", ignore},
+		{"0.0.1", "0.0.2", update},
+		{"1.0.99", "1.1.0", update},
+		{"1.99.99", "2.0.0", update},
+		{"1.1.1", "1.1.0", ignore},
+		{"1.1.0", "1.00.99", ignore},
+		{"1.0.0", "0.99.99", ignore},
 	}
 
 	for _, c := range cases {
@@ -152,13 +149,13 @@ func TestSelectAction(t *testing.T) {
 
 func TestNewerThanRight(t *testing.T) {
 	cases := []struct {
-		lhs string
-		rhs string
+		lhs     string
+		rhs     string
 		expects bool
 	}{
-		{ "0.0.1", "0.0.2", false },
-		{ "0.0.3", "0.0.2", true },
-		{ "1.1.1", "0.99.99", true },
+		{"0.0.1", "0.0.2", false},
+		{"0.0.3", "0.0.2", true},
+		{"1.1.1", "0.99.99", true},
 	}
 	for _, c := range cases {
 		if newerThanRight(c.lhs, c.rhs) != c.expects {
