@@ -13,6 +13,29 @@ type App struct {
 	Client *http.Client
 }
 
+// GetVersions return {"ios": "x.y.z", "android": "a.b.c"} or error
+func (app *App) GetVersions(iosID string, androidID string) (map[string]string, error) {
+	v := map[string]string{}
+
+	if len(iosID) > 0 {
+		iosv, err := app.GetiOSVersion()
+		if err != nil {
+			return v, err
+		}
+		v["ios"] = iosv
+	}
+
+	if len(androidID) > 0 {
+		androidv, err := app.GetAndroidVersion()
+		if err != nil {
+			return v, err
+		}
+		v["android"] = androidv
+	}
+
+	return v, nil
+}
+
 // GetiOSVersion ...
 func (app *App) GetiOSVersion() (string, error) {
 	resp, err := app.Client.Get("https://itunes.apple.com/lookup?id=944884603&country=JP")

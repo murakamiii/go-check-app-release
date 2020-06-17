@@ -6,7 +6,7 @@ build:
 	go build -o bin/app cmd/app/main.go
 
 justrun:
-	bin/app
+	bin/app $(ARG)
 
 run: build justrun
 

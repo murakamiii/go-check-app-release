@@ -14,24 +14,16 @@ import (
 func main() {
 	flag.Parse()
 	slackPath := flag.Arg(0)
+	iosID := flag.Arg(1)
+	androidID := flag.Arg(2)
 
 	app := app.App{&http.Client{Timeout: time.Second * 10}}
-	v := map[string]string{}
-
-	iosv, err := app.GetiOSVersion()
+	v, err := app.GetVersions(iosID, androidID)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	v["ios"] = iosv
-
-	androidv, err := app.GetAndroidVersion()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	v["android"] = androidv
-
+	
 	msgs, err := tag.UpdateVersionTags(v)
 	if err != nil {
 		fmt.Println(err)
