@@ -113,6 +113,8 @@ func newerThanRight(lhs string, rhs string) bool {
 
 		if lVal > rVal {
 			return true
+		} else if lVal < rVal {
+			return false
 		}
 	}
 
