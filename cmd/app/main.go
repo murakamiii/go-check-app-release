@@ -16,13 +16,22 @@ func main() {
 	slackPath := flag.Arg(0)
 
 	app := app.App{&http.Client{Timeout: time.Second * 10}}
-	version, err := app.GetVersion()
+	v := map[string]string{}
+
+	iosv, err := app.GetiOSVersion()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+	v["ios"] = iosv
 
-	v := map[string]string{"ios": version}
+	androidv, err := app.GetAndroidVersion()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	v["android"] = androidv
+
 	msgs, err := tag.UpdateVersionTags(v)
 	if err != nil {
 		fmt.Println(err)

@@ -24,7 +24,7 @@ func NewTestClient(fn RoundTripFunc) *http.Client {
 	}
 }
 
-func TestGetVersion(t *testing.T) {
+func TestGetiOSVersion(t *testing.T) {
 	cases := []struct {
 		client    *http.Client
 		expectStr string
@@ -53,7 +53,7 @@ func TestGetVersion(t *testing.T) {
 	}
 	for _, c := range cases {
 		app := App{c.client}
-		str, err := app.GetVersion()
+		str, err := app.GetiOSVersion()
 		if err != nil && err.Error() != c.expectErr.Error() {
 			t.Errorf("invalid error expect: %s, actual: %s", c.expectErr, err)
 		}
