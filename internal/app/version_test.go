@@ -1,4 +1,4 @@
-package ios
+package app
 
 import (
 	"bytes"

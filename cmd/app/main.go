@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	ios "github.com/murakamiii/go-check-app-release/internal/app/ios"
+	app "github.com/murakamiii/go-check-app-release/internal/app"
 	slack "github.com/murakamiii/go-check-app-release/internal/slack"
 	tag "github.com/murakamiii/go-check-app-release/internal/tag"
 )
@@ -15,7 +15,7 @@ func main() {
 	flag.Parse()
 	slackPath := flag.Arg(0)
 
-	app := ios.App{&http.Client{Timeout: time.Second * 10}}
+	app := app.App{&http.Client{Timeout: time.Second * 10}}
 	version, err := app.GetVersion()
 	if err != nil {
 		fmt.Println(err)

@@ -1,7 +1,0 @@
-package android
-
-import (
-	"io/ioutil"
-	"net/http"
-)
-
