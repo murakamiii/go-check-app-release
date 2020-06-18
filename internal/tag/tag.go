@@ -67,7 +67,7 @@ func doAction(current map[string]string, retrived map[string]string, osType stri
 		exec.Command("git", "tag", newTag).Run()
 
 		if cron {
-			exec.Command("git", "push", newTag).Run()
+			exec.Command("git", "push", "origin", newTag).Run()
 		}
 
 		return fmt.Sprintf("%s: %s を登録しました", osType, retrived[osType])
@@ -78,8 +78,8 @@ func doAction(current map[string]string, retrived map[string]string, osType stri
 		exec.Command("git", "tag", newTag).Run()
 
 		if cron {
-			exec.Command("git", "push", fmt.Sprintf(":%s", oldTag)).Run()
-			exec.Command("git", "push", newTag).Run()
+			exec.Command("git", "origin", "push", fmt.Sprintf(":%s", oldTag)).Run()
+			exec.Command("git", "origin", "push", newTag).Run()
 		}
 
 		return fmt.Sprintf("%s: %s が公開されました", osType, retrived[osType])
