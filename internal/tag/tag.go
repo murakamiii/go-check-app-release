@@ -11,7 +11,7 @@ import (
 
 // currentVersions return map[string]string like {"ios": "1.23.4"} or Error
 func currentVersions() (map[string]string, error) {
-	if os.Getenv("GITHUB_WORKFLOW") == "Cron" {
+	if os.Getenv("GITHUB_WORKFLOW") == "Cron: Go" {
 		exec.Command("git", "pull", "--tags").Run()
 	} 
 
@@ -58,7 +58,7 @@ func UpdateVersionTags(retrived map[string]string) ([]string, error) {
 
 func doAction(current map[string]string, retrived map[string]string, osType string) string {
 
-	cron := os.Getenv("GITHUB_WORKFLOW") == "Cron"
+	cron := os.Getenv("GITHUB_WORKFLOW") == "Cron: Go"
 	fmt.Printf("Cron: %s\n", os.Getenv("GITHUB_WORKFLOW"))
 
 	act := selectAction(current[osType], retrived[osType])
