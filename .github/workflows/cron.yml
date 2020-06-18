@@ -28,4 +28,4 @@ jobs:
         fi
 
     - name: Run
-      run: make run ${{ secrets.RUN_ARGS }}
+      run: make run ARG=${{ secrets.RUN_ARGS }}
