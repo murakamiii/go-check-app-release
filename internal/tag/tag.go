@@ -68,6 +68,7 @@ func doAction(current map[string]string, retrived map[string]string, osType stri
 		exec.Command("git", "tag", newTag).Run()
 
 		if cron {
+			fmt.Printf("newTag:  %s\n", newTag)
 			err := exec.Command("git", "push", "origin", newTag).Run()
 			if err != nil {
 				fmt.Println(err)
