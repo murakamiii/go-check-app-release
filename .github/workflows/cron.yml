@@ -6,7 +6,7 @@ on:
 jobs:
 
   build:
-    name: Cron Run
+    name: Cron
     runs-on: ubuntu-20.04
     steps:
 
