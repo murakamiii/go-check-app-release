@@ -1,4 +1,6 @@
 # go-check-app-release
+![Go](https://github.com/murakamiii/go-check-app-release/workflows/Go/badge.svg)
+
 Checking release iOS/Android on app store / slack messaging
 
 ```
