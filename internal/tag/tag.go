@@ -4,12 +4,17 @@ import (
 	"fmt"
 	"math"
 	"os/exec"
+	"os"
 	"strconv"
 	"strings"
 )
 
 // currentVersions return map[string]string like {"ios": "1.23.4"} or Error
 func currentVersions() (map[string]string, error) {
+	if os.Getenv("GITHUB_WORKFLOW") == "Cron" {
+		exec.Command("git", "pull", "--tags").Run()
+	} 
+
 	version := map[string]string{}
 
 	lines, err := exec.Command("git", "tag").Output()
@@ -52,11 +57,18 @@ func UpdateVersionTags(retrived map[string]string) ([]string, error) {
 }
 
 func doAction(current map[string]string, retrived map[string]string, osType string) string {
+
+	cron := os.Getenv("GITHUB_WORKFLOW") == "Cron"
+	
 	act := selectAction(current[osType], retrived[osType])
 	switch act {
 	case insert:
 		newTag := fmt.Sprintf("%s-%s", osType, retrived[osType])
 		exec.Command("git", "tag", newTag).Run()
+
+		if cron {
+			exec.Command("git", "push", newTag).Run()
+		}
 
 		return fmt.Sprintf("%s: %s を登録しました", osType, retrived[osType])
 	case update:
@@ -64,6 +76,11 @@ func doAction(current map[string]string, retrived map[string]string, osType stri
 		exec.Command("git", "tag", "-d", oldTag).Run()
 		newTag := fmt.Sprintf("%s-%s", osType, retrived[osType])
 		exec.Command("git", "tag", newTag).Run()
+
+		if cron {
+			exec.Command("git", "push", fmt.Sprintf(":%s", oldTag)).Run()
+			exec.Command("git", "push", newTag).Run()
+		}
 
 		return fmt.Sprintf("%s: %s が公開されました", osType, retrived[osType])
 	default:
