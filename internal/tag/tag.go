@@ -67,7 +67,10 @@ func doAction(current map[string]string, retrived map[string]string, osType stri
 		exec.Command("git", "tag", newTag).Run()
 
 		if cron {
-			exec.Command("git", "push", "origin", newTag).Run()
+			err := exec.Command("git", "push", "origin", newTag).Run()
+			if err != nil {
+				fmt.Println(err)
+			}
 		}
 
 		return fmt.Sprintf("%s: %s を登録しました", osType, retrived[osType])
