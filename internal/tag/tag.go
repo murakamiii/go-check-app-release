@@ -59,7 +59,7 @@ func UpdateVersionTags(retrived map[string]string) ([]string, error) {
 func doAction(current map[string]string, retrived map[string]string, osType string) string {
 
 	cron := os.Getenv("GITHUB_WORKFLOW") == "Cron"
-	fmt.Printf("Cron: %t", cron)
+	fmt.Printf("Cron: %s\n", os.Getenv("GITHUB_WORKFLOW"))
 
 	act := selectAction(current[osType], retrived[osType])
 	switch act {
