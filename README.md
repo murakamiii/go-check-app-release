@@ -4,5 +4,5 @@
 Checking release iOS/Android on app store / slack messaging
 
 ```
-make run ARG="slack/incomingwebhook/url IOSIDXXXXXXX com.id.android.app"
+make run ARG="slack/incomingwebhook/urlpath IOSIDXXXXXXX com.id.android.app"
 ```
