@@ -6,23 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"testing"
+	testutil "github.com/murakamiii/go-check-app-release/testutil"
 )
-
-// RoundTripFunc see http://hassansin.github.io/Unit-Testing-http-client-in-Go
-type RoundTripFunc func(req *http.Request) *http.Response
-
-// RoundTrip see http://hassansin.github.io/Unit-Testing-http-client-in-Go
-func (f RoundTripFunc) RoundTrip(req *http.Request) (*http.Response, error) {
-	return f(req), nil
-}
-
-// NewTestClient returns *http.Client with Transport replaced to avoid making real calls
-// see http://hassansin.github.io/Unit-Testing-http-client-in-Go
-func NewTestClient(fn RoundTripFunc) *http.Client {
-	return &http.Client{
-		Transport: RoundTripFunc(fn),
-	}
-}
 
 func TestPostMessage(t *testing.T) {
 	cases := []struct {
@@ -30,7 +15,7 @@ func TestPostMessage(t *testing.T) {
 		expectErr error
 	}{
 		{
-			NewTestClient(func(req *http.Request) *http.Response {
+			testutil.NewTestClient(func(req *http.Request) *http.Response {
 				return &http.Response{
 					StatusCode: 200,
 					Body:       ioutil.NopCloser(bytes.NewBufferString("")),
@@ -39,7 +24,7 @@ func TestPostMessage(t *testing.T) {
 			nil,
 		},
 		{
-			NewTestClient(func(req *http.Request) *http.Response {
+			testutil.NewTestClient(func(req *http.Request) *http.Response {
 				return &http.Response{
 					StatusCode: 400,
 					Body:       ioutil.NopCloser(bytes.NewBufferString("")),
