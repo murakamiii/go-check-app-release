@@ -2,10 +2,8 @@ package tag
 
 import (
 	"fmt"
-	"math"
 	"os/exec"
 	"os"
-	"strconv"
 	"strings"
 )
 
@@ -57,9 +55,7 @@ func UpdateVersionTags(retrived map[string]string) ([]string, error) {
 }
 
 func doAction(current map[string]string, retrived map[string]string, osType string) string {
-
 	cron := os.Getenv("GITHUB_WORKFLOW") == "Cron"
-	fmt.Printf("Cron: %s\n", os.Getenv("GITHUB_WORKFLOW"))
 
 	act := selectAction(current[osType], retrived[osType])
 	switch act {
@@ -110,35 +106,9 @@ func selectAction(current string, retrived string) action {
 		return insert
 	}
 
-	if newerThanRight(retrived, current) {
+	if retrived != current {
 		return update
 	}
 
 	return ignore
-}
-
-func newerThanRight(lhs string, rhs string) bool {
-	left := strings.Split(lhs, ".")
-	right := strings.Split(rhs, ".")
-
-	for i := 0; i < int(math.Max(float64(len(left)), float64(len(right)))); i++ {
-		if i > len(left)-1 {
-			return false
-		}
-
-		if i > len(right)-1 {
-			return true
-		}
-
-		lVal, _ := strconv.Atoi(left[i])
-		rVal, _ := strconv.Atoi(right[i])
-
-		if lVal > rVal {
-			return true
-		} else if lVal < rVal {
-			return false
-		}
-	}
-
-	return false
 }
