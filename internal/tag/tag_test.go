@@ -134,32 +134,13 @@ func TestSelectAction(t *testing.T) {
 		{"0.0.1", "0.0.2", update},
 		{"1.0.99", "1.1.0", update},
 		{"1.99.99", "2.0.0", update},
-		{"1.1.1", "1.1.0", ignore},
-		{"1.1.0", "1.00.99", ignore},
-		{"1.0.0", "0.99.99", ignore},
+		{"1.1.1", "1.1.0", update},
 	}
 
 	for _, c := range cases {
 		if selectAction(c.current, c.retrived) != c.expects {
 			// TODO: https://stackoverflow.com/questions/30177344/how-to-print-the-string-representation-of-an-enum-in-go
 			t.Errorf("test failed: current: %s, retrived: %s, expects: %#v, actual: %#v", c.current, c.retrived, c.expects, selectAction(c.current, c.retrived))
-		}
-	}
-}
-
-func TestNewerThanRight(t *testing.T) {
-	cases := []struct {
-		lhs     string
-		rhs     string
-		expects bool
-	}{
-		{"0.0.1", "0.0.2", false},
-		{"0.0.3", "0.0.2", true},
-		{"1.1.1", "0.99.99", true},
-	}
-	for _, c := range cases {
-		if newerThanRight(c.lhs, c.rhs) != c.expects {
-			t.Errorf("test failed: lhs: %s, rhs: %s, expects: %t", c.lhs, c.rhs, c.expects)
 		}
 	}
 }
