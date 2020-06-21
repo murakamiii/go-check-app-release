@@ -7,6 +7,8 @@ import (
 	"golang.org/x/net/html"
 	"io/ioutil"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 // App ...
@@ -39,7 +41,8 @@ func (app *App) GetVersions(iosID string, androidID string) (map[string]string, 
 
 // GetiOSVersion ...
 func (app *App) GetiOSVersion(id string) (string, error) {
-	url := fmt.Sprintf("https://itunes.apple.com/lookup?id=%s&country=JP", id)
+	datetime := strconv.FormatInt(time.Now().Unix(), 10) // キャッシュ対策
+	url := fmt.Sprintf("https://itunes.apple.com/lookup?id=%s&country=JP&d=%s", id, datetime)
 	resp, err := app.Client.Get(url)
 	if err != nil {
 		return "", err

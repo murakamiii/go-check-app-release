@@ -2,8 +2,8 @@ package tag
 
 import (
 	"fmt"
-	"os/exec"
 	"os"
+	"os/exec"
 	"strings"
 )
 
@@ -11,7 +11,7 @@ import (
 func currentVersions() (map[string]string, error) {
 	if os.Getenv("GITHUB_WORKFLOW") == "Cron" {
 		exec.Command("git", "pull", "--tags").Run()
-	} 
+	}
 
 	version := map[string]string{}
 
