@@ -3,10 +3,10 @@ package app
 import (
 	"bytes"
 	"errors"
+	testutil "github.com/murakamiii/go-check-app-release/testutil"
 	"io/ioutil"
 	"net/http"
 	"testing"
-	testutil "github.com/murakamiii/go-check-app-release/testutil"
 )
 
 func TestGetiOSVersion(t *testing.T) {
@@ -50,7 +50,7 @@ func TestGetiOSVersion(t *testing.T) {
 
 func TestApp_GetAndroidVersion(t *testing.T) {
 	tests := []struct {
-		client    *http.Client
+		client  *http.Client
 		want    string
 		wantErr bool
 	}{
@@ -76,7 +76,7 @@ func TestApp_GetAndroidVersion(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		app := App{ Client: tt.client }
+		app := App{Client: tt.client}
 		got, err := app.GetAndroidVersion("com.test")
 		if (err != nil) != tt.wantErr {
 			t.Errorf("App.GetAndroidVersion() error = %v, wantErr %v", err, tt.wantErr)

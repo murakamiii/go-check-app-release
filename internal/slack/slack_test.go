@@ -3,10 +3,10 @@ package slack
 import (
 	"bytes"
 	"errors"
+	testutil "github.com/murakamiii/go-check-app-release/testutil"
 	"io/ioutil"
 	"net/http"
 	"testing"
-	testutil "github.com/murakamiii/go-check-app-release/testutil"
 )
 
 func TestPostMessage(t *testing.T) {
