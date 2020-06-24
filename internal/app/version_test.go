@@ -67,6 +67,16 @@ func TestApp_GetAndroidVersion(t *testing.T) {
 		{
 			testutil.NewTestClient(func(req *http.Request) *http.Response {
 				return &http.Response{
+					StatusCode: 200,
+					Body:       ioutil.NopCloser(bytes.NewBufferString(inValidHTMLMock)),
+				}
+			}),
+			"",
+			true,
+		},
+		{
+			testutil.NewTestClient(func(req *http.Request) *http.Response {
+				return &http.Response{
 					StatusCode: 500,
 					Body:       ioutil.NopCloser(bytes.NewBufferString("")),
 				}
@@ -98,5 +108,20 @@ const htmlMock = `<!DOCTYPE html>
    </head>
    <body>
       <div class="hAyfc"><div class="BgcNfc">現在のバージョン</div><span class="htlgb"><div class="IQ1z0d"><span class="htlgb">4.14.2</span></div></span></div>
+   </body>
+</html>`
+
+const inValidHTMLMock = `<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <title>title</title>
+      <link rel="stylesheet" href="style.css">
+      <script src="script.js"></script>
+   </head>
+   <body>
+	  <div class="hAyfc"><div class="BgcNfc">現在のバージョン</div><span class="htlgb"><div class="IQ1z0d">
+	    <span class="htlgb">4.14.2</span>
+	  </div></span></div>
    </body>
 </html>`
