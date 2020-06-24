@@ -94,7 +94,7 @@ func (app *App) GetAndroidVersion(id string) (string, error) {
 	f = func(n *html.Node) {
 		if n.Type == html.TextNode && n.Data == "現在のバージョン" { // 日本語決めうち
 			// ノードの親の次の子の子の子
-			version = n.Parent.NextSibling.FirstChild.FirstChild.FirstChild.Data
+			version = emptyOrData(firstChildOrNil(firstChildOrNil(firstChildOrNil(nextSiblingOrNil(n.Parent)))))
 		}
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
 			f(c)
@@ -106,4 +106,25 @@ func (app *App) GetAndroidVersion(id string) (string, error) {
 		return version, nil
 	}
 	return "", errors.New("can not find the android version Info")
+}
+
+func firstChildOrNil(node *html.Node) *html.Node {
+	if node == nil {
+		return nil
+	}
+	return node.FirstChild
+}
+
+func nextSiblingOrNil(node *html.Node) *html.Node {
+	if node == nil {
+		return nil
+	}
+	return node.NextSibling
+}
+
+func emptyOrData(node *html.Node) string {
+	if node == nil {
+		return ""
+	}
+	return node.Data
 }
