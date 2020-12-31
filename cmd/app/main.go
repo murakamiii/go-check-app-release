@@ -21,7 +21,7 @@ func main() {
 	flag.Parse()
 
 	app := app.App{&http.Client{Timeout: time.Second * 10}}
-	v, err := app.GetVersions(*iosID, *androidID)
+	v, err := app.GetVersions(*iosID, *androidID, *appStoreCache)
 	if err != nil {
 		fmt.Println(err)
 		return

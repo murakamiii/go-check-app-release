@@ -17,11 +17,11 @@ type App struct {
 }
 
 // GetVersions return {"ios": "x.y.z", "android": "a.b.c"} or error
-func (app *App) GetVersions(iosID string, androidID string) (map[string]string, error) {
+func (app *App) GetVersions(iosID string, androidID string, appStoreCache bool) (map[string]string, error) {
 	v := map[string]string{}
 
 	if len(iosID) > 0 {
-		iosv, err := app.GetiOSVersion(iosID)
+		iosv, err := app.GetiOSVersion(iosID, appStoreCache)
 		if err != nil {
 			return v, err
 		}
@@ -40,9 +40,13 @@ func (app *App) GetVersions(iosID string, androidID string) (map[string]string, 
 }
 
 // GetiOSVersion ...
-func (app *App) GetiOSVersion(id string) (string, error) {
-	datetime := strconv.FormatInt(time.Now().Unix(), 10) // キャッシュ対策
-	url := fmt.Sprintf("https://itunes.apple.com/lookup?id=%s&country=JP&d=%s", id, datetime)
+func (app *App) GetiOSVersion(id string, appStoreCache bool) (string, error) {
+	url := fmt.Sprintf("https://itunes.apple.com/lookup?id=%s&country=JP", id)
+	if !appStoreCache {
+		datetime := strconv.FormatInt(time.Now().Unix(), 10) // キャッシュ対策
+		url += fmt.Sprintf("&d=%s", datetime)
+	}
+
 	resp, err := app.Client.Get(url)
 	if err != nil {
 		return "", err

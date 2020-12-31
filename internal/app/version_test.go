@@ -38,7 +38,7 @@ func TestGetiOSVersion(t *testing.T) {
 	}
 	for _, c := range cases {
 		app := App{c.client}
-		str, err := app.GetiOSVersion("123456789")
+		str, err := app.GetiOSVersion("123456789", true)
 		if err != nil && err.Error() != c.expectErr.Error() {
 			t.Errorf("invalid error expect: %s, actual: %s", c.expectErr, err)
 		}
