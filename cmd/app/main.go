@@ -17,6 +17,8 @@ func main() {
 	iosID := flag.String("ios", "", "iOS app ID")
 	androidID := flag.String("android", "", "android app ID")
 	appStoreCache := flag.Bool("cache", false, "ignore app store cache")
+	registerdMessage := flag.String("register", "{{.OS}} {{.Version}} app registered:tada:", "register message")
+	updateMessage := flag.String("update", "{{.OS}} {{.Version}} app released:tada:", "update message")
 
 	flag.Parse()
 
@@ -27,7 +29,7 @@ func main() {
 		return
 	}
 
-	msgs, err := tag.UpdateVersionTags(v)
+	msgs, err := tag.UpdateVersionTags(v, *registerdMessage, *updateMessage)
 	if err != nil {
 		fmt.Println(err)
 		return
