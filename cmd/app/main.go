@@ -12,13 +12,16 @@ import (
 )
 
 func main() {
+
+	slackPath := flag.String("slack", "", "the post message api url")
+	iosID := flag.String("ios", "", "iOS app ID")
+	androidID := flag.String("android", "", "android app ID")
+	appStoreCache := flag.Bool("cache", false, "ignore app store cache")
+
 	flag.Parse()
-	slackPath := flag.Arg(0)
-	iosID := flag.Arg(1)
-	androidID := flag.Arg(2)
 
 	app := app.App{&http.Client{Timeout: time.Second * 10}}
-	v, err := app.GetVersions(iosID, androidID)
+	v, err := app.GetVersions(*iosID, *androidID, *appStoreCache)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -30,9 +33,9 @@ func main() {
 		return
 	}
 
-	if len(slackPath) > 0 && len(msgs) > 0 {
+	if len(*slackPath) > 0 && len(msgs) > 0 {
 		sl := slack.Slack{&http.Client{Timeout: time.Second * 10}}
-		err := sl.PostMessages(slackPath, msgs)
+		err := sl.PostMessages(*slackPath, msgs)
 		if err != nil {
 			fmt.Println(err)
 		}
