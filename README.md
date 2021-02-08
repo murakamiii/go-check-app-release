@@ -4,5 +4,10 @@
 Checking iOS/Android app release on store & post slack messages
 
 ```
-make run ARG="-slack https://hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX -ios IOSIDXXXXXXX -android com.id.android.app -cache"
+make run ARG="-slack T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX \
+-ios IOSIDXXXXXXX \
+-android com.id.android.app \
+-cache false\
+-register '{{.OS}} {{.Version}} app registered:tada:' \
+-update '{{.OS}} {{.Version}} app released:tada:'"
 ```

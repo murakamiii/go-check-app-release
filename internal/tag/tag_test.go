@@ -98,10 +98,10 @@ func TestDoAction(t *testing.T) {
 		{[]string{}, map[string]string{}, "ios", "", []string{""}},
 		{[]string{"ios-0.0.1"}, map[string]string{}, "ios", "", []string{"ios-0.0.1"}},
 		{[]string{"ios-0.0.1", "android-0.1.2"}, map[string]string{}, "ios", "", []string{"ios-0.0.1", "android-0.1.2"}},
-		{[]string{"android-0.1.2"}, map[string]string{"ios": "0.0.2"}, "ios", "ios: 0.0.2 を登録しました", []string{"android-0.1.2", "ios-0.0.2"}},
-		{[]string{"ios-0.0.1"}, map[string]string{"android": "0.2.0"}, "android", "android: 0.2.0 を登録しました", []string{"android-0.2.0", "ios-0.0.1"}},
-		{[]string{"ios-0.0.1", "android-0.1.2"}, map[string]string{"ios": "0.0.2"}, "ios", "ios: 0.0.2 が公開されました", []string{"android-0.1.2", "ios-0.0.2"}},
-		{[]string{"ios-0.0.1", "android-0.1.2"}, map[string]string{"android": "0.2.0"}, "android", "android: 0.2.0 が公開されました", []string{"android-0.2.0", "ios-0.0.1"}},
+		{[]string{"android-0.1.2"}, map[string]string{"ios": "0.0.2"}, "ios", "ios 0.0.2 app registered:tada:", []string{"android-0.1.2", "ios-0.0.2"}},
+		{[]string{"ios-0.0.1"}, map[string]string{"android": "0.2.0"}, "android", "android 0.2.0 app registered:tada:", []string{"android-0.2.0", "ios-0.0.1"}},
+		{[]string{"ios-0.0.1", "android-0.1.2"}, map[string]string{"ios": "0.0.2"}, "ios", "ios 0.0.2 app released:tada:", []string{"android-0.1.2", "ios-0.0.2"}},
+		{[]string{"ios-0.0.1", "android-0.1.2"}, map[string]string{"android": "0.2.0"}, "android", "android 0.2.0 app released:tada:", []string{"android-0.2.0", "ios-0.0.1"}},
 	}
 
 	for _, c := range cases {
@@ -111,7 +111,7 @@ func TestDoAction(t *testing.T) {
 			log.Fatal(err)
 		}
 
-		actualMsg := doAction(current, c.retrived, c.osType)
+		actualMsg := doAction(current, c.retrived, c.osType, "{{.OS}} {{.Version}} app registered:tada:", "{{.OS}} {{.Version}} app released:tada:")
 		actualTags := getTagLines()
 		if actualMsg != c.expectsMsg || !equalsStringSlice(actualTags, c.expectsTags) {
 			t.Errorf("test failed: \n\tcase: %#v, \n\tactualMsg: %s \n\tactualTags: %#v", c, actualMsg, actualTags)

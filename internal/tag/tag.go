@@ -1,11 +1,29 @@
 package tag
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"os/exec"
 	"strings"
+	"text/template"
 )
+
+// Message contains os("ios", "android"), version, template.
+type Message struct {
+	OS 		string
+	Version string
+	tmpl	*template.Template
+}
+
+func (m Message) message() (string, error) {
+	var message bytes.Buffer
+	if err := m.tmpl.Execute(&message, m); err != nil {
+		return "", err
+	}
+
+	return message.String(), nil
+}
 
 // currentVersions return map[string]string like {"ios": "1.23.4"} or Error
 func currentVersions() (map[string]string, error) {
@@ -33,7 +51,7 @@ func currentVersions() (map[string]string, error) {
 
 // UpdateVersionTags has a side effect to git tags.
 // return messages []strings or error
-func UpdateVersionTags(retrived map[string]string) ([]string, error) {
+func UpdateVersionTags(retrived map[string]string, registerdMessage string, updateMessage string) ([]string, error) {
 	messages := []string{}
 
 	current, err := currentVersions()
@@ -41,12 +59,12 @@ func UpdateVersionTags(retrived map[string]string) ([]string, error) {
 		return messages, err
 	}
 
-	iosMsg := doAction(current, retrived, "ios")
+	iosMsg := doAction(current, retrived, "ios", registerdMessage, updateMessage)
 	if len(iosMsg) > 0 {
 		messages = append(messages, iosMsg)
 	}
 
-	androidMsg := doAction(current, retrived, "android")
+	androidMsg := doAction(current, retrived, "android", registerdMessage, updateMessage)
 	if len(androidMsg) > 0 {
 		messages = append(messages, androidMsg)
 	}
@@ -54,7 +72,7 @@ func UpdateVersionTags(retrived map[string]string) ([]string, error) {
 	return messages, nil
 }
 
-func doAction(current map[string]string, retrived map[string]string, osType string) string {
+func doAction(current map[string]string, retrived map[string]string, osType string, registerdMessage string, updateMessage string) string {
 	cron := os.Getenv("GITHUB_WORKFLOW") == "Cron"
 
 	act := selectAction(current[osType], retrived[osType])
@@ -71,7 +89,19 @@ func doAction(current map[string]string, retrived map[string]string, osType stri
 			}
 		}
 
-		return fmt.Sprintf("%s: %s を登録しました", osType, retrived[osType])
+		tmpl, err := template.New("insert").Parse(registerdMessage)
+		if err != nil {
+			fmt.Println(err)
+			return ""
+		}
+
+		message, err := Message { osType, retrived[osType], tmpl}.message()
+		if err != nil {
+			fmt.Println(err)
+			return ""
+		}
+
+		return message
 	case update:
 		oldTag := fmt.Sprintf("%s-%s", osType, current[osType])
 		exec.Command("git", "tag", "-d", oldTag).Run()
@@ -83,7 +113,19 @@ func doAction(current map[string]string, retrived map[string]string, osType stri
 			exec.Command("git", "push", "origin", newTag).Run()
 		}
 
-		return fmt.Sprintf("%s: %s が公開されました", osType, retrived[osType])
+		tmpl, err := template.New("insert").Parse(updateMessage)
+		if err != nil {
+			fmt.Println(err)
+			return ""
+		}
+
+		message, err := Message { osType, retrived[osType], tmpl}.message()
+		if err != nil {
+			fmt.Println(err)
+			return ""
+		}
+
+		return message
 	default:
 		return ""
 	}
